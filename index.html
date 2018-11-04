@@ -1,0 +1,431 @@
+<!DOCTYPE HTML>
+<!--
+	Dimension by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>LA Metro Bike Share</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<style>
+				/* Always set the map height explicitly to define the size of the div
+				 * element that contains the map. */
+				#map {
+				height: 400px;  /* The height is 400 pixels */
+        		width: 100%;  /* The width is the width of the web page */
+				}
+		</style>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<div class="logo">
+							<span class="icon fa-bicycle"></span>
+						</div>
+						<div class="content">
+							<div class="inner">
+								<h1>LA Metro Bike Share</h1>
+								<p>An interactive report on bike share data in Los Angeles<br />
+								By James Yun</p>
+							</div>
+						</div>
+						<nav>
+							<ul>
+								<li><a href="#intro">Overview</a></li>
+								<li><a href="#work">Live Data</a></li>
+								<li><a href="#about">Answers</a></li>
+								<li><a href="#contact">About me</a></li>
+								<!--<li><a href="#elements">Elements</a></li>-->
+							</ul>
+						</nav>
+					</header>
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Intro -->
+							<article id="intro">
+								<h2 class="major">Overview</h2>
+								<span class="image main"><img src="images/crowded.jpg" alt="" /></span>
+								<p>Throughout the country, bikeshare programs are being introduced big cities. Along with being a great way to stay fit, bikesharing also reduces traffic congestion and CO2 emmissions. When implemented effectively, these programs create a significant positive impact to these urban communities.</p>
+								<p>Today we will take a look at one bikeshare program in depth: Los Angeles' <a href="https://bikeshare.metro.net/">Metro Bike Share</a>, a 1400 bike system spanning nearly 100 stations. By analyzing the large amounts of historical data from 7/7/16 to 3/3/31, we can identify patterns, analyze behavior and propose strategic recommendations to improve the system.</p>
+								<p><br>Below is a map of every station in the dataset. The size of the circles corresponds to the number of trips originating from that station. Feel free to use the slider or pop-up calendar to adjust the dates.</p>
+								<p><br>View in full screen for best experience.</p>
+								<div class='tableauPlaceholder' id='viz1540941168115' style='position: relative'>
+										<noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;LA&#47;
+										  LAMetroBikeShare&#47;Sheet1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  
+										  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> 
+										  <param name='embed_code_version' value='3' /> <param name='path' value='views&#47;LAMetroBikeShare&#47;Sheet1?:embed=y&amp;:display_count=y&amp;publish=yes' /> 
+										  <param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;LA&#47;LAMetroBikeShare&#47;Sheet1&#47;1.png' /> 
+										  <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' />
+										  <param name='display_count' value='yes' /><param name='filter' value='publish=yes' /></object></div>                
+										  <script type='text/javascript'>                    
+										  var divElement = document.getElementById('viz1540941168115');                    
+										  var vizElement = divElement.getElementsByTagName('object')[0];                    
+										  vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    
+										  var scriptElement = document.createElement('script');                    
+										  scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    
+										  vizElement.parentNode.insertBefore(scriptElement, vizElement);</script>
+
+							</article>
+
+						<!-- Work -->
+							<article id="work">
+								<h2 class="major">Live Station Data</h2>
+								<span class="image main"><img src="images/skateboard.jpg" alt="" /></span>
+								<p>Below is a Google Map of all active Metro Bike Share stations. Click on a marker to view specific details about the station including station ID, number of bikes available, and more.</p> 
+								<a href="https://bikeshare.metro.net/about/data/">Live data provided by Metro Bike Share</a>. 
+					
+								<p><br>View in full screen for best experience.</p>
+								<div id="map"></div>
+									<script>
+									var map;
+									function initMap() {
+										
+										// The map, centered at Los Angeles
+										map = new google.maps.Map(document.getElementById('map'), {
+										center: {lat: 33.9, lng: -118.25},
+										zoom: 10
+										});
+
+										// Greatest line of code ever written
+										map.data.loadGeoJson('https://bikeshare.metro.net/stations/json/');
+
+										infoWindow = new google.maps.InfoWindow();
+										
+										map.data.addListener('click', function(event) {
+										
+										infoWindow.setContent(
+										"<p style=\"color:black; \">" + 
+										event.feature.getProperty("name") + "<br/>" +
+											"Station ID: " + event.feature.getProperty("kioskId") + "<br/>" + 
+											event.feature.getProperty("bikesAvailable") + " bikes available" + "<br/>" + 
+											event.feature.getProperty("docksAvailable") + " docks available")+ "</p>";
+
+										var anchor = new google.maps.MVCObject();
+												anchor.set("position",event.latLng);
+												infoWindow.open(map,anchor);
+										})
+									}
+									</script>
+									<!--Load the API from the specified URL
+									* The async attribute allows the browser to render the page while the API loads
+									* The key parameter will contain your own API key
+									* The callback parameter executes the initMap() function
+									-->
+									<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCO2-lPMAfFxogisjASCRvVzZqRcF7yGrk&callback=initMap"
+									></script>
+							</article>
+
+						<!-- About -->
+							<article id="about">
+								<h2 class="major">Answers</h2>
+								<span class="image main"><img src="images/street.jpg" alt="" /></span>
+								<p><b>1. Data Visuals: Display or graph 3 metrics or trends from the data set that are interesting to you.</b></p>
+								<p>This website is littered with interactive visuals that try to make sense of the 75 megabytes of data. They are all created using Tableau, which allows a high degree of user interactivity. Using the "start time" slider is especially insightful in identifying trends over time. I found looking at the data in this way is pretty interesting and I hope you will too.</p>
+								<p><b>2. Which start/stop stations are most popular?</b></p>
+								<p>Looking at the entire sample time period, the most popular station was station 3069, followed by station 3030 and 3005. 11% of all rides originated from one of these three stations. However, newly created station 3082 has become the new most popular station recently. You can see this trend by moving the slider to include only the more recent data</p>
+								<div class='tableauPlaceholder' id='viz1541288992816' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Mo&#47;MostPopularStartingBikeStations&#47;Sheet2&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='path' value='views&#47;MostPopularStartingBikeStations&#47;Sheet2?:embed=y&amp;:display_count=y&amp;publish=yes' /> <param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Mo&#47;MostPopularStartingBikeStations&#47;Sheet2&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1541288992816');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+								<p><br>Station 3005 has generally been the most popular station to end a ride. Similarly to before, however, station 3082 has a growing amount of bike arrivals in the more recent time periods.</p>
+								<div class='tableauPlaceholder' id='viz1541288800227' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Mo&#47;MostPopularEndingBikeStations&#47;Sheet2&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='path' value='views&#47;MostPopularEndingBikeStations&#47;Sheet2?:embed=y&amp;:display_count=y&amp;publish=yes' /> <param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Mo&#47;MostPopularEndingBikeStations&#47;Sheet2&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1541288800227');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+								
+								<p><br><br><b>3. What is the average distance traveled?</b></p>
+								<p>In order to calculate any distance, we must need a starting point and an ending point. Let's create a map where we connect the stations with a linear path according to the dataset. A formula was used to convert the changes in GPS coordinates to a distance in miles.</p>
+								<div class='tableauPlaceholder' id='viz1541296661671' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bi&#47;BikeOrigin-DestinationMap&#47;Sheet1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='site_root' value='' /><param name='name' value='BikeOrigin-DestinationMap&#47;Sheet1' /><param name='tabs' value='no' /><param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bi&#47;BikeOrigin-DestinationMap&#47;Sheet1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1541296661671');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+								<p>That's a very tangled spider web! All those 132,427 trips amassed a total of 900,286 miles. That yields an average distance traveled of <b>3.4 miles</b>. This estimate is under the assumption that paths from station to station are strictly linear and that round trips have a distance of zero. Therefore, I expect the true value to be slightly higher.</p>
+								<p>According to <a href="https://bikeshare.metro.net/about/data/">Metro Bike Share</a>, there's been a total of 594,638 trips covering 1,890,000 miles for an average of 3.19 miles/trip since program inception.</p>
+								
+								<p>Below is a bonus spider map visualization of the paths bikers take when leaving from a certain origin station. This allows one to identify the most common destinations after leaving a certain station. Use the dropdown on the right to pick a station to focus in on. </p>
+								<div class='tableauPlaceholder' id='viz1541295681181' style='position: relative'><noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bi&#47;BikeOrigin-DestinationMapbyStation&#47;Sheet1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='path' value='views&#47;BikeOrigin-DestinationMapbyStation&#47;Sheet1?:embed=y&amp;:display_count=y&amp;publish=yes' /> <param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Bi&#47;BikeOrigin-DestinationMapbyStation&#47;Sheet1&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1541295681181');                    var vizElement = divElement.getElementsByTagName('object')[0];                    vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+								<p><br><br><b>4. How many riders include bike sharing as a regular part of their commute?</b></p>
+
+								<p>Unfortunately, we only have data about the bike share rides, not the bike share users, so I'll have to make a few inferences in this dimensional analysis. </p>
+								<p>Let's assume that riders who use bike sharing regularly are have either the monthly pass or the annual pass. (If you're commuting regularly with a day pass, might I suggest moving up a tier for a better value.) I'll also exclude round trips because that defeats the purpose of a commute. 
+									This leaves 77,639 total trips. The dataset spans from 7/7/16 to 3/31/17 or 236 days. Assuming a regular commuter uses the bikeshare an average of 4 days a week (using 4 instead of 5 to account for rain), they would have used it a total of 135 days during this time period. 
+									Usually commutes consist of both an outbound trip and a return trip, so a commuter would have used the bike share 270 times (twice per day) over this period. Dividing the total number of trips (77,639) by the number of trips per commuter (270), yields a total of <b>288 riders</b> who use the bike share as a regular part of their commute.</p>
+								<span class="image main"><img src="images/bikesign.jpg" alt="" /></span>
+
+							</article>
+
+						<!-- Contact -->
+							<article id="contact">
+								<h2 class="major">About me</h2>
+								
+								<p>I'm James Yun, a 2nd year Computer Science student at the University of Virginia.<p>
+								<p>I hope you enjoyed my web app!</p>
+
+								<a href="https://www.linkedin.com/in/yun-james/">LinkedIn</a>
+									
+							</article>
+
+						<!-- Elements -->
+							<article id="elements">
+								<h2 class="major">Elements</h2>
+
+								<section>
+									<h3 class="major">Text</h3>
+									<p>This is <b>bold</b> and this is <strong>strong</strong>. This is <i>italic</i> and this is <em>emphasized</em>.
+									This is <sup>superscript</sup> text and this is <sub>subscript</sub> text.
+									This is <u>underlined</u> and this is code: <code>for (;;) { ... }</code>. Finally, <a href="#">this is a link</a>.</p>
+									<hr />
+									<h2>Heading Level 2</h2>
+									<h3>Heading Level 3</h3>
+									<h4>Heading Level 4</h4>
+									<h5>Heading Level 5</h5>
+									<h6>Heading Level 6</h6>
+									<hr />
+									<h4>Blockquote</h4>
+									<blockquote>Fringilla nisl. Donec accumsan interdum nisi, quis tincidunt felis sagittis eget tempus euismod. Vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan faucibus. Vestibulum ante ipsum primis in faucibus lorem ipsum dolor sit amet nullam adipiscing eu felis.</blockquote>
+									<h4>Preformatted</h4>
+									<pre><code>i = 0;
+
+while (!deck.isInOrder()) {
+    print 'Iteration ' + i;
+    deck.shuffle();
+    i++;
+}
+
+print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
+								</section>
+
+								<section>
+									<h3 class="major">Lists</h3>
+
+									<h4>Unordered</h4>
+									<ul>
+										<li>Dolor pulvinar etiam.</li>
+										<li>Sagittis adipiscing.</li>
+										<li>Felis enim feugiat.</li>
+									</ul>
+
+									<h4>Alternate</h4>
+									<ul class="alt">
+										<li>Dolor pulvinar etiam.</li>
+										<li>Sagittis adipiscing.</li>
+										<li>Felis enim feugiat.</li>
+									</ul>
+
+									<h4>Ordered</h4>
+									<ol>
+										<li>Dolor pulvinar etiam.</li>
+										<li>Etiam vel felis viverra.</li>
+										<li>Felis enim feugiat.</li>
+										<li>Dolor pulvinar etiam.</li>
+										<li>Etiam vel felis lorem.</li>
+										<li>Felis enim et feugiat.</li>
+									</ol>
+									<h4>Icons</h4>
+									<ul class="icons">
+										<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+										<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+										<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+										<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
+									</ul>
+
+									<h4>Actions</h4>
+									<ul class="actions">
+										<li><a href="#" class="button primary">Default</a></li>
+										<li><a href="#" class="button">Default</a></li>
+									</ul>
+									<ul class="actions stacked">
+										<li><a href="#" class="button primary">Default</a></li>
+										<li><a href="#" class="button">Default</a></li>
+									</ul>
+								</section>
+
+								<section>
+									<h3 class="major">Table</h3>
+									<h4>Default</h4>
+									<div class="table-wrapper">
+										<table>
+											<thead>
+												<tr>
+													<th>Name</th>
+													<th>Description</th>
+													<th>Price</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Item One</td>
+													<td>Ante turpis integer aliquet porttitor.</td>
+													<td>29.99</td>
+												</tr>
+												<tr>
+													<td>Item Two</td>
+													<td>Vis ac commodo adipiscing arcu aliquet.</td>
+													<td>19.99</td>
+												</tr>
+												<tr>
+													<td>Item Three</td>
+													<td> Morbi faucibus arcu accumsan lorem.</td>
+													<td>29.99</td>
+												</tr>
+												<tr>
+													<td>Item Four</td>
+													<td>Vitae integer tempus condimentum.</td>
+													<td>19.99</td>
+												</tr>
+												<tr>
+													<td>Item Five</td>
+													<td>Ante turpis integer aliquet porttitor.</td>
+													<td>29.99</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<tr>
+													<td colspan="2"></td>
+													<td>100.00</td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+
+									<h4>Alternate</h4>
+									<div class="table-wrapper">
+										<table class="alt">
+											<thead>
+												<tr>
+													<th>Name</th>
+													<th>Description</th>
+													<th>Price</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>Item One</td>
+													<td>Ante turpis integer aliquet porttitor.</td>
+													<td>29.99</td>
+												</tr>
+												<tr>
+													<td>Item Two</td>
+													<td>Vis ac commodo adipiscing arcu aliquet.</td>
+													<td>19.99</td>
+												</tr>
+												<tr>
+													<td>Item Three</td>
+													<td> Morbi faucibus arcu accumsan lorem.</td>
+													<td>29.99</td>
+												</tr>
+												<tr>
+													<td>Item Four</td>
+													<td>Vitae integer tempus condimentum.</td>
+													<td>19.99</td>
+												</tr>
+												<tr>
+													<td>Item Five</td>
+													<td>Ante turpis integer aliquet porttitor.</td>
+													<td>29.99</td>
+												</tr>
+											</tbody>
+											<tfoot>
+												<tr>
+													<td colspan="2"></td>
+													<td>100.00</td>
+												</tr>
+											</tfoot>
+										</table>
+									</div>
+								</section>
+
+								<section>
+									<h3 class="major">Buttons</h3>
+									<ul class="actions">
+										<li><a href="#" class="button primary">Primary</a></li>
+										<li><a href="#" class="button">Default</a></li>
+									</ul>
+									<ul class="actions">
+										<li><a href="#" class="button">Default</a></li>
+										<li><a href="#" class="button small">Small</a></li>
+									</ul>
+									<ul class="actions">
+										<li><a href="#" class="button primary icon fa-download">Icon</a></li>
+										<li><a href="#" class="button icon fa-download">Icon</a></li>
+									</ul>
+									<ul class="actions">
+										<li><span class="button primary disabled">Disabled</span></li>
+										<li><span class="button disabled">Disabled</span></li>
+									</ul>
+								</section>
+
+								<section>
+									<h3 class="major">Form</h3>
+									<form method="post" action="#">
+										<div class="fields">
+											<div class="field half">
+												<label for="demo-name">Name</label>
+												<input type="text" name="demo-name" id="demo-name" value="" placeholder="Jane Doe" />
+											</div>
+											<div class="field half">
+												<label for="demo-email">Email</label>
+												<input type="email" name="demo-email" id="demo-email" value="" placeholder="jane@untitled.tld" />
+											</div>
+											<div class="field">
+												<label for="demo-category">Category</label>
+												<select name="demo-category" id="demo-category">
+													<option value="">-</option>
+													<option value="1">Manufacturing</option>
+													<option value="1">Shipping</option>
+													<option value="1">Administration</option>
+													<option value="1">Human Resources</option>
+												</select>
+											</div>
+											<div class="field half">
+												<input type="radio" id="demo-priority-low" name="demo-priority" checked>
+												<label for="demo-priority-low">Low</label>
+											</div>
+											<div class="field half">
+												<input type="radio" id="demo-priority-high" name="demo-priority">
+												<label for="demo-priority-high">High</label>
+											</div>
+											<div class="field half">
+												<input type="checkbox" id="demo-copy" name="demo-copy">
+												<label for="demo-copy">Email me a copy</label>
+											</div>
+											<div class="field half">
+												<input type="checkbox" id="demo-human" name="demo-human" checked>
+												<label for="demo-human">Not a robot</label>
+											</div>
+											<div class="field">
+												<label for="demo-message">Message</label>
+												<textarea name="demo-message" id="demo-message" placeholder="Enter your message" rows="6"></textarea>
+											</div>
+										</div>
+										<ul class="actions">
+											<li><input type="submit" value="Send Message" class="primary" /></li>
+											<li><input type="reset" value="Reset" /></li>
+										</ul>
+									</form>
+								</section>
+
+							</article>
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<p class="copyright">&copy; 2018 James Yun. Design: <a href="https://html5up.net">HTML5 UP</a>. Images: <a href="https://unsplash.com">Unsplash.</a></p>
+					</footer>
+
+			</div>
+
+		<!-- BG -->
+			<div id="bg"></div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bikeshare App</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    
+      <div class='tableauPlaceholder' id='viz1540941168115' style='position: relative'>
+      <noscript><a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;LA&#47;
+        LAMetroBikeShare&#47;Sheet1&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  
+        style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> 
+        <param name='embed_code_version' value='3' /> <param name='path' value='views&#47;LAMetroBikeShare&#47;Sheet1?:embed=y&amp;:display_count=y&amp;publish=yes' /> 
+        <param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;LA&#47;LAMetroBikeShare&#47;Sheet1&#47;1.png' /> 
+        <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' />
+        <param name='display_count' value='yes' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    
+        var divElement = document.getElementById('viz1540941168115');                    
+        var vizElement = divElement.getElementsByTagName('object')[0];                    
+        vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';                    
+        var scriptElement = document.createElement('script');                    
+        scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    
+        vizElement.parentNode.insertBefore(scriptElement, vizElement);</script>
+
+    <div id="map"></div>
+    <script>
+      var map;
+      function initMap() {
+        
+        // The map, centered at Los Angeles
+        map = new google.maps.Map(document.getElementById('map'), {
+          center: {lat: 33.9, lng: -118.25},
+          zoom: 11
+        });
+
+        // Greatest line of code ever written
+        map.data.loadGeoJson('https://bikeshare.metro.net/stations/json/');
+
+        infoWindow = new google.maps.InfoWindow();
+        
+        map.data.addListener('click', function(event) {
+          
+          infoWindow.setContent(event.feature.getProperty("name") + "<br/>" +
+            "Station ID: " + event.feature.getProperty("kioskId") + "<br/>" + 
+            event.feature.getProperty("bikesAvailable") + " bikes available" + "<br/>" + 
+            event.feature.getProperty("docksAvailable") + " docks available");
+          
+          var anchor = new google.maps.MVCObject();
+				  anchor.set("position",event.latLng);
+				  infoWindow.open(map,anchor);
+        })
+      }
+    </script>
+    <!--Load the API from the specified URL
+    * The async attribute allows the browser to render the page while the API loads
+    * The key parameter will contain your own API key
+    * The callback parameter executes the initMap() function
+    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCO2-lPMAfFxogisjASCRvVzZqRcF7yGrk&callback=initMap"
+    async defer></script>
+  </body>
+</html>
